@@ -26,7 +26,15 @@ THE SOFTWARE.
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
-   This element manage and inspect the network connection between the Meteor client and server.
+This element manage and inspect the network connection between the Meteor client and server.
+
+Example:
+
+      <meteor-connection connected={{conn}} on-server-disconnected="_onDisconnect"></meteor-connection>
+      <template is="dom-if" if="{{conn}}">
+          <div>Meteor server is connected</div>
+      </template>
+
 -->
 <script>
   Polymer({
