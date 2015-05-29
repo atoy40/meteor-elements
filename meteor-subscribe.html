@@ -26,30 +26,31 @@ THE SOFTWARE.
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
-Subscribe to a Meteor server or DDP publication
+Subscribe to a Meteor (DDP) server publication.
+
+Example :
+
+      <meteor-subscribe name="peoples" isready="{{subready}}"></meteor-subscribe>
+
 -->
+
 <script>
   Polymer({
     is: 'meteor-subscribe',
-    properties: {
-      /**
-       * Fired when the subscribtion becomes ready (first shot of results received).
-       *
-       * @event subscribe-ready
-       */
-      /**
-       * Fired when an error occurs. The detail object contains the error.
-       *
-       * @event subscribe-error
-       */
 
-      /**
-       * The observe handle.
-       */
-      _handle: {
-        type: Object,
-        value: null
-      },
+    /**
+     * Fired when the subscribtion becomes ready (first shot of results received).
+     *
+     * @event subscribe-ready
+     */
+
+    /**
+     * Fired when an error occurs. The detail object contains the error.
+     *
+     * @event subscribe-error
+     */
+
+    properties: {
       /**
        * Publish name to subscribe.
        */
@@ -57,6 +58,7 @@ Subscribe to a Meteor server or DDP publication
         type: String,
         value: ""
       },
+
       /**
        * The subscribe arguments.
        */
@@ -64,6 +66,7 @@ Subscribe to a Meteor server or DDP publication
         type: Array,
         value: function() { return []; },
       },
+
       /**
        * Ready state (first shot of results received).
        */
@@ -94,9 +97,6 @@ Subscribe to a Meteor server or DDP publication
         });
 
         this._handle = Meteor.subscribe.apply(null, callargs);
-        /*this.computation = Tracker.autorun(function() {
-          this.isready = this._handle.ready();
-        }.bind(this));*/
       }
     },
     /** Stop this subscription */
@@ -104,10 +104,6 @@ Subscribe to a Meteor server or DDP publication
       if (this._handle) {
         this._handle.stop();
         this._handle = null;
-      }
-      if (this._computation) {
-        this._computation.stop();
-        this._computation = null;
       }
     },
     ready: function() {

@@ -28,46 +28,69 @@ THE SOFTWARE.
 <!--
 A wrapper to meteor Mongo.Collection object.
 -->
+
 <script>
   Polymer({
     is: 'meteor-collection',
+
+    /**
+     * Fired when a document has been inserted. detail contains the id of the new document.
+     *
+     * @event insert
+     */
+
+    /**
+     * Fired when an error occurs while inserting or removing document. detail contains the error object
+     *
+     * @event error
+     */
+
     properties: {
       /**
-       * Fired when a document has been inserted. detail contains the id of the new document.
-       *
-       * @event insert
+       * Name of the mongo collection.
        */
-      /**
-       * Fired when an error occurs while inserting or removing document. detail contains the error object
-       *
-       * @event error
-       */
-
-
-      /** Name of the mongo collection */
       name: {
         type: String,
         value: null,
-        observer: '_nameChanged',
+        observer: '_nameChanged'
       },
-      /** The collection instance */
-      ref: {
+      /**
+       * The collection instance.
+       */
+      _ref: {
         type: Object,
         value: null,
         notify: true,
       }
     },
+    /**
+     * React to collection name changes.
+     */
     _nameChanged: function() {
       if (this.name) {
-        this.ref = new Mongo.Collection(this.name);
+        this._ref = new Mongo.Collection(this.name);
+        this._setupChildQueries();
+      }
+    },
+    /**
+     * Setup the collection reference to childs elements.
+     */
+    _setupChildQueries: function() {
+      var childs = Polymer.dom(this).childNodes;
+      for(var i=0; i<childs.length; i++) {
+        if (typeof childs[i]._setupCollection === 'function') {
+          childs[i]._setupCollection(this._ref);
+        }
       }
     },
     /**
      * Insert a document to collection.
+     *
+     * @method insert
      */
     insert: function(doc) {
-      if (this.ref)
-        this.ref.insert(doc, function(err, id) {
+      if (this._ref)
+        this._ref.insert(doc, function(err, id) {
           if (err)
             this.fire('error', { error: err });
           else
@@ -75,13 +98,17 @@ A wrapper to meteor Mongo.Collection object.
         }.bind(this));
     },
     /**
-     * Remove documents in collection
+     * Remove documents in collection.
+     *
+     * @method remove
      */
     remove: function(selector) {
-      if (this.ref)
-        this.ref.remove(selector, function(err) {
+      if (this._ref)
+        this._ref.remove(selector, function(err) {
           this.fire('error', { error: err });
         }.bind(this));
     },
+    ready: function() {
+    }
   });
 </script>

@@ -26,11 +26,27 @@ THE SOFTWARE.
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
-Start a reactive collection query.
+Start a reactive collection query. This element must be a direct child of a meteor-collection element.
+
+
+Example :
+
+      <meteor-collection name="peoples" on-insert="_onInsert">
+        <meteor-query query='{ "age": 18 }' options='{"sort": { size: -1 } }' data="{{eighties}}"></meteor-query>
+      </meteor-collection>
+
+      <template is="dom-repeat" items="{{eighties}}">
+        <div>
+          <span>{{item.name}}</span>
+        </div>
+      </template>
+
 -->
+
 <script>
   Polymer({
     is: 'meteor-query',
+
     properties: {
       /**
        * Data contains collection objects matching the query.
@@ -41,13 +57,15 @@ Start a reactive collection query.
         notify: true,
         readOnly: true
       },
+
       /**
        * The collection object to query
        */
-      collection: {
+      _collection: {
         type: Object,
         value: null
       },
+
       /**
        *  A query describing the documents to find.
        */
@@ -55,6 +73,7 @@ Start a reactive collection query.
         type: Object,
         value: function() { return {}; },
       },
+
       /**
        * An object containing query options (sort, skip and more).
        */
@@ -62,16 +81,14 @@ Start a reactive collection query.
         type: Object,
         value: function() { return {}; },
       },
-      /**
-       * The meteor observe handle
-       */
-      _handle: {
-        type: Object,
-        value: null
-      },
     },
-    observers: [ '_refind(collection, query, options)' ],
-    _refind: function(collection, query, options) {
+
+    observers: [ '_refind(_collection, query, options)' ],
+    
+    _setupCollection: function(collection) {
+      this._collection = collection;
+    },
+    _refind: function(_collection, query, options) {
       //console.log("(re)find meteor-query");
 
       if (this._handle) {
@@ -79,11 +96,11 @@ Start a reactive collection query.
         this._handle = null;
       }
 
-      if (this.collection) {
+      if (this._collection) {
         this.initialdata = [];
         this.initdone = false;
 
-        this._handle = this.collection.find(this.query, this.options).observeChanges({
+        this._handle = this._collection.find(this.query, this.options).observeChanges({
           addedBefore: function(id, fields, before) {
             // added _id
             fields._id = id;

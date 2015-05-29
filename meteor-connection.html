@@ -36,21 +36,24 @@ Example:
       </template>
 
 -->
+
 <script>
   Polymer({
     is: 'meteor-connection',
-    properties: {
-      /**
-       * Fired when the connection is established.
-       *
-       * @event server-connected
-       */
-      /**
-        * Fired when the server is disconnected.
-        *
-        * @event server-disconnected
-        */
 
+    /**
+     * Fired when the connection is established.
+     *
+     * @event server-connected
+     */
+
+    /**
+      * Fired when the server is disconnected.
+      *
+      * @event server-disconnected
+      */
+
+    properties: {
       /**
        * Meteor status object.
        */
@@ -59,6 +62,7 @@ Example:
         notify: true,
         readOnly: true
       },
+
       /**
        * the connected field from the status object.
        */

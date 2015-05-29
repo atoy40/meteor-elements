@@ -8,8 +8,8 @@
   ],
   "license": "MIT",
   "ignore": [
-    "bower_components",
-    "index.html"
+    "**/.*",
+    "bower_components"
   ],
   "keywords": [
     "web-components",
