@@ -1,0 +1,15 @@
+{
+  "name": "gh-pages",
+  "private": true,
+  "main": "index.html",
+  "authors": [
+    "Anthony Hinsinger <anthony.hinsinger@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [],
+  "dependencies": {
+    "meteor-elements": "atoy40/meteor-elements#~0.0.2",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0"
+  }
+}
+

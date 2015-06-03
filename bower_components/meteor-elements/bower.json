@@ -1,0 +1,27 @@
+{
+  "name": "meteor-elements",
+  "version": "0.0.1",
+  "private": true,
+  "main": "meteor-elements.html",
+  "authors": [
+    "Anthony Hinsinger <anthony.hinsinger@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components"
+  ],
+  "keywords": [
+    "web-components",
+    "polymer",
+    "meteor",
+    "wrapper"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "webcomponentsjs": "Polymer/webcomponentsjs#^0.7.0"
+  }
+}

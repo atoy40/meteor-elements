@@ -1,0 +1,105 @@
+<!--
+@license
+The MIT License (MIT)
+
+Copyright (c) 2015 Anthony Hinsinger
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+This element manage and inspect the network connection between the Meteor client and server.
+
+Example:
+
+      <meteor-connection connected={{conn}} on-server-disconnected="_onDisconnect"></meteor-connection>
+      <template is="dom-if" if="{{conn}}">
+          <div>Meteor server is connected</div>
+      </template>
+
+-->
+
+<script>
+  Polymer({
+    is: 'meteor-connection',
+
+    /**
+     * Fired when the connection is established.
+     *
+     * @event server-connected
+     */
+
+    /**
+      * Fired when the server is disconnected.
+      *
+      * @event server-disconnected
+      */
+
+    properties: {
+      /**
+       * Meteor status object.
+       */
+      status: {
+        type: Object,
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * the connected field from the status object.
+       */
+      connected: {
+        type: Boolean,
+        notify: true,
+        readOnly: true,
+        value: false
+      }
+    },
+    /**
+     * Disconnect the client from the server.
+     */
+    disconnect: function() {
+      Meteor.disconnect();
+    },
+    /**
+     * Force an immediate reconnection attempt if the client is not connected to the server.
+     */
+    reconnect: function() {
+      Meteor.reconnect();
+    },
+    ready: function() {
+      this._computation = Tracker.autorun(function() {
+        var status = Meteor.status();
+
+        if (this.connected != status.connected) {
+          this.fire(status.connected ? 'server-connected' : 'server-disconnected', { status: status });
+        }
+
+        this._setStatus(status);
+        this._setConnected(status.connected);
+      }.bind(this));
+    },
+    detached: function() {
+      if (this._computation)
+        this._computation.stop();
+    },
+  });
+</script>
