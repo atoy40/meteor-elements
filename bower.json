@@ -8,7 +8,7 @@
   "license": "MIT",
   "ignore": [],
   "dependencies": {
-    "meteor-elements": "atoy40/meteor-elements#~0.0.2",
+    "meteor-elements": "atoy40/meteor-elements#~0.0.3",
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
     "bootstrap": "~3.3.4",
     "highlightjs": "~8.5.0"

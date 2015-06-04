@@ -81,22 +81,34 @@ Example :
         type: Object,
         value: function() { return {}; },
       },
+
+      /**
+       * Activate this query.
+       */
+      enable: {
+        type: Boolean,
+        value: false,
+      },
     },
 
-    observers: [ '_refind(_collection, query, options)' ],
-    
+    observers: [ '_refind(_collection, query, options, enable)' ],
+
     _setupCollection: function(collection) {
       this._collection = collection;
     },
-    _refind: function(_collection, query, options) {
-      //console.log("(re)find meteor-query");
+    _refind: function(_collection, query, options, enable) {
+      this.debounce("refind", this._setupObserver);
+    },
+    _setupObserver: function(_collection, query, options, enable) {
+      //console.log("(re)find meteor-query "+this._collection+" "+this.query+" "+this.options);
 
       if (this._handle) {
         this._handle.stop();
         this._handle = null;
+        this.splice('data', 0, this.data.length);
       }
 
-      if (this._collection) {
+      if (this._collection && this.enable) {
         this.initialdata = [];
         this.initdone = false;
 

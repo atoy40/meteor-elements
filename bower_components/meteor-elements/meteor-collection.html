@@ -40,6 +40,12 @@ A wrapper to meteor Mongo.Collection object.
      */
 
     /**
+     * Fired when a documents has been removed.
+     *
+     * @event removed
+     */
+
+    /**
      * Fired when an error occurs while inserting or removing document. detail contains the error object
      *
      * @event error
@@ -105,7 +111,10 @@ A wrapper to meteor Mongo.Collection object.
     remove: function(selector) {
       if (this._ref)
         this._ref.remove(selector, function(err) {
-          this.fire('error', { error: err });
+          if (err)
+            this.fire('error', { error: err });
+          else
+            this.fire('removed');
         }.bind(this));
     },
     ready: function() {
