@@ -19,6 +19,7 @@
               <nav>
                 <ul class="nav masthead-nav">
                   <li class="active"><a href="#">Home</a></li>
+                  <li><a href="bower_components/meteor-elements/index.html">Doc</a></li>
                   <li><a href="http://github.com/atoy40/meteor-elements">Github</a></li>
                 </ul>
               </nav>
@@ -30,9 +31,8 @@
             <pre><code class="html">&lt;dom-module id="my-app"&gt;
   &lt;template&gt;
     &lt;meteor-subscribe name="allpeoples" isready="{{active}}"&gt;&lt;/meteor-subscribe&gt;
-    &lt;meteor-collection name="peoples" on-insert="_onInsert"&gt;
-      &lt;meteor-query
-        query='{"age": 18}' options='{"sort": {"weight": -1}}'
+    &lt;meteor-collection name="peoples" on-insert="onInsert"&gt;
+      &lt;meteor-query query='{"age": 18}' options='{"sort": {"weight": -1}}'
         enable="{{active}}" data="{{data}}"&gt;&lt;/meteor-query&gt;
     &lt;/meteor-collection&gt;
 
@@ -47,13 +47,13 @@
 &lt;script&gt;
   Polymer({
     is: 'my-app',
-    _onInsert: function(e) {
+    onInsert: function(e) {
       console.log("Inserted data with _id " + e.detail.id);
     }
   });
 &lt;/script&gt;</code></pre>
             <p class="lead">A demo application is available on <a href="https://github.com/atoy40/meteor-polymer-music">github</a>.</p>
-            <p class="lead"><a href="bower_components/meteor-elements/index.html" class="btn btn-lg btn-default">Elements documentation</a></p>
+            <p class="lead"><a href="bower_components/meteor-elements/index.html" class="btn btn-lg btn-default">Read elements documentation</a></p>
           </div>
 
         </div>
