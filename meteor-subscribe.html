@@ -30,7 +30,7 @@ Subscribe to a Meteor (DDP) server publication.
 
 Example :
 
-      <meteor-subscribe name="peoples" isready="{{subready}}"></meteor-subscribe>
+      <meteor-subscribe name="peoples" args="[]" isready="{{subready}}"></meteor-subscribe>
 
 -->
 
@@ -64,7 +64,15 @@ Example :
        */
       args: {
         type: Array,
-        value: function() { return []; },
+        value: null
+      },
+
+      /**
+       * Wait to get an Array on args to start subscription
+       */
+      waitargs: {
+        type: Boolean,
+        value: true
       },
 
       /**
@@ -76,12 +84,12 @@ Example :
         notify: true
       }
     },
-    observers: [ '_resub(name, args)' ],
-    _resub: function(name, args) {
-      //console.log("(re)subscribe meteor-subscribe "+name+" "+args);
+    observers: [ '_resub(name, args, waitargs)' ],
+    _resub: function(name, args, waitargs) {
+      //console.log("(re)subscribe meteor-subscribe "+name+" "+ args);
       this.stop();
 
-      if (this.name) {
+      if (this.name && (args instanceof Array || !waitargs)) {
         var callargs = this.args.slice(0);
         callargs.unshift(this.name);
         callargs.push({

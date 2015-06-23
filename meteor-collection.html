@@ -74,9 +74,17 @@ A wrapper to meteor Mongo.Collection object.
      */
     _nameChanged: function() {
       if (this.name) {
-        this._ref = new Mongo.Collection(this.name);
-        this._setupChildQueries();
+        if (window['__meteor_elements_'+this.name]) {
+          this._ref = window['__meteor_elements_'+this.name];
+        } else {
+          this._ref = new Mongo.Collection(this.name);
+          window['__meteor_elements_'+this.name] = this._ref;
+        }
+      } else {
+        this._ref = null;
       }
+
+      this._setupChildQueries();
     },
     /**
      * Setup the collection reference to childs elements.
