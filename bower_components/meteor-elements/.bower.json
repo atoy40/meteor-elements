@@ -1,6 +1,6 @@
 {
   "name": "meteor-elements",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "private": true,
   "main": "meteor-elements.html",
   "authors": [
@@ -25,13 +25,13 @@
     "webcomponentsjs": "Polymer/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/atoy40/meteor-elements",
-  "_release": "0.0.3",
+  "_release": "0.1.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.3",
-    "commit": "792f04a84cb10f7a06c8988f52c21b49b9dbb715"
+    "tag": "v0.1.0",
+    "commit": "905f70c5a85339f37a1d7e28eaa2e79b2743d129"
   },
   "_source": "git://github.com/atoy40/meteor-elements.git",
-  "_target": "~0.0.3",
+  "_target": "~0.1.0",
   "_originalSource": "atoy40/meteor-elements"
 }
