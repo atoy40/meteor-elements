@@ -7,11 +7,11 @@ are bundles into a Bower package with the same name as this Meteor
 package.
 
 The only goal of this Meteor package is to help developer to start
-application using Polymer
+application using Polymer and meteor-elements
 
 ## Create a Meteor/Polymer apps
 
-```json
+```bash
 meteor create mypolymerapp
 cd mypolymerapp
 meteor add atoy40:meteor-elements
@@ -30,7 +30,7 @@ Then, you'll need three files :
 }
 ```
 
-imports must contains at least the main components of your Polymer apps.
+imports must contains at least the main component of your Polymer apps.
 In this example this file is located in public/components/mypolymerapp.html
 
 ### [prjroot]/lib/.bowerrc
@@ -44,7 +44,7 @@ It is located in the ib directory to be handled before the
 config.vulcanize file.
 
 ### [prjroot]/lib/bower.json
-```
+```json
 {
   "name": "mypolymerapp",
   "version": "0.0.0",
@@ -75,5 +75,5 @@ config.vulcanize file.
 
 This is probably the most important file, because it contains Polymer
 itself and meteor-elements components. You can add or remove
-dependancies according to the elements you want to use.
+dependencies according to the elements you want to use.
 
