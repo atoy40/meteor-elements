@@ -19,31 +19,37 @@ meteor add atoy40:meteor-elements
 
 Then, you'll need three files :
 
-[prjroot]/config.vulcanize
+### [prjroot]/config.vulcanize
 ```
 {
   "polyfill": "/bower_components/webcomponentsjs/webcomponents.min.js",
   "useShadowDom": false,
   "imports": [
-    "/components/music-app.html"
+    "/components/mypolymerapp.html"
   ]
 }
 ```
 
-[prjroot]/lib/.bowerrc
+imports must contains at least the main components of your Polymer apps.
+In this example this file is located in public/components/mypolymerapp.html
+
+### [prjroot]/lib/.bowerrc
 ```
 {
   "directory":"../public/bower_components"
 }
 ```
 
-[prjroot]/lib/bower.json
+It is located in the ib directory to be handled before the
+config.vulcanize file.
+
+### [prjroot]/lib/bower.json
 ```
 {
-  "name": "Polytest",
+  "name": "mypolymerapp",
   "version": "0.0.0",
   "authors": [
-    "Anthony Hinsinger <anthony.hinsinger@gmail.com>"
+    "me"
   ],
   "license": "MIT",
   "private": true,
@@ -66,4 +72,8 @@ Then, you'll need three files :
   }
 }
 ```
+
+This is probably the most important file, because it contains Polymer
+itself and meteor-elements components. You can add or remove
+dependancies according to the elements you want to use.
 
