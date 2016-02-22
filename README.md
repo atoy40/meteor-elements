@@ -11,7 +11,7 @@ application using Polymer
 
 ## Create a Meteor/Polymer apps
 
-```
+```json
 meteor create mypolymerapp
 cd mypolymerapp
 meteor add atoy40:meteor-elements
@@ -20,7 +20,7 @@ meteor add atoy40:meteor-elements
 Then, you'll need three files :
 
 ### [prjroot]/config.vulcanize
-```
+```json
 {
   "polyfill": "/bower_components/webcomponentsjs/webcomponents.min.js",
   "useShadowDom": false,
@@ -34,7 +34,7 @@ imports must contains at least the main components of your Polymer apps.
 In this example this file is located in public/components/mypolymerapp.html
 
 ### [prjroot]/lib/.bowerrc
-```
+```json
 {
   "directory":"../public/bower_components"
 }
