@@ -77,3 +77,13 @@ This is probably the most important file, because it contains Polymer
 itself and meteor-elements components. You can add or remove
 dependencies according to the elements you want to use.
 
+### the <body>
+
+In the best case, your html body will only contains one html tag : your
+Polymer app top component :
+
+```html
+<body>
+  <mypolymerapp></mypolymerapp>
+</body>
+```
