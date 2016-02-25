@@ -9,6 +9,16 @@ package.
 The only goal of this Meteor package is to help developer to start
 application using Polymer and meteor-elements
 
+## Create a Meteor/Polymer apps, the easy way
+
+To get a meteor project ready to use with Polymer and meteor-elements
+
+```bash
+git clone https://github.com/atoy40/meteor-elements-startup.git
+cd meteor-elements-startup
+meteor run
+```
+
 ## Create a Meteor/Polymer apps
 
 ```bash
@@ -77,7 +87,7 @@ This is probably the most important file, because it contains Polymer
 itself and meteor-elements components. You can add or remove
 dependencies according to the elements you want to use.
 
-### the <body>
+### the HTML body
 
 In the best case, your html body will only contains one html tag : your
 Polymer app top component :
