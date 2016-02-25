@@ -1,6 +1,6 @@
 Package.describe({
   name: 'atoy40:meteor-elements',
-  version: '0.0.2',
+  version: '0.0.3',
   summary: 'Integrate Meteor API with Polymer and web elements',
   git: 'https://github.com/atoy40/meteor-elements.git',
   documentation: 'README.md'
