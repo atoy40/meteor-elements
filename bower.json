@@ -1,6 +1,6 @@
 {
   "name": "meteor-elements",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "main": "meteor-elements.html",
   "authors": [
@@ -18,10 +18,10 @@
     "wrapper"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#^1.2.0"
+    "polymer": "Polymer/polymer#~1.3.0"
   },
   "devDependencies": {
-    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-    "webcomponentsjs": "Polymer/webcomponentsjs#^0.7.0"
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.0",
+    "webcomponentsjs": "Polymer/webcomponentsjs#~0.7.0"
   }
 }

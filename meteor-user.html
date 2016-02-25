@@ -1,0 +1,108 @@
+<!--
+@license
+The MIT License (MIT)
+
+Copyright (c) 2015 Anthony Hinsinger
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+This element manage current user.
+
+Example:
+
+    <meteor-user logged-in={{conn}} user={{user}}></meteor-user>
+
+    <span hidden$="{{!conn}}" >UserName : {{user.profile.name}}</span>
+
+-->
+
+<script>
+Polymer({
+  is: 'meteor-user',
+
+  properties: {
+
+    /**
+     * Get the current user id, or null if no user is logged in.
+     */
+    id: {
+      type: String,
+      notify: true,
+      readOnly: true
+    },
+    /**
+     * Get the current user record, or null if no user is logged in.
+     */
+    user : {
+      type : Object,
+      notify: true,
+      readOnly: true
+    },
+    /**
+     * Helper on user is logged in or not
+     */
+    loggedIn: {
+      type: Boolean,
+      notify: true,
+      readOnly: true,
+      value: false
+    },
+    /**
+     * True if a login method (such as Meteor.loginWithPassword, Meteor.loginWithFacebook, or Accounts.createUser) is currently in progress.
+     */
+    loggingIn: {
+      type: Boolean,
+      notify: true,
+      readOnly: true,
+      value: false
+    },
+
+  },
+  /**
+   * Log the user out.
+   */
+  logout : function() {
+    Meteor.logout();
+  },
+  ready: function() {
+    this._userComputation = Tracker.autorun(function() {
+      var user = Meteor.user();
+
+      this._setId(user ? user._id : null);
+      this._setUser(user);
+      this._setLoggedIn(user != null);
+    }.bind(this));
+
+    this._loggingInComputation = Tracker.autorun(function() {
+      this._setLoggingIn(Meteor.loggingIn());
+    }.bind(this));
+
+  },
+  detached: function() {
+    if (this._userComputation)
+      this._userComputation.stop();
+    if (this._loggingInComputation)
+      this._loggingInComputation.stop();
+  }
+});
+</script>

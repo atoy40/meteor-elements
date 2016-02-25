@@ -141,7 +141,7 @@ Example :
           }.bind(this),
           movedBefore: function(id, before) {
             var oldindex = this._findIndex(this.data, id);
-            var entry = this.data.splice(oldindex, 1)[0];
+            var entry = this.splice('data', oldindex, 1)[0];
 
             if (before) {
               var newindex = this._findIndex(this.data, before);

@@ -46,6 +46,12 @@ A wrapper to meteor Mongo.Collection object.
      */
 
     /**
+     * Fired when a documents has been updated.
+     *
+     * @event updated
+     */
+
+    /**
      * Fired when an error occurs while inserting or removing document. detail contains the error object
      *
      * @event error
@@ -124,6 +130,21 @@ A wrapper to meteor Mongo.Collection object.
           else
             this.fire('removed');
         }.bind(this));
+    },
+    /**
+     * Modify one or more documents in the collection.
+     *
+     * @method update
+     */
+    update: function(selector, modifier, options) {
+      options = options || {};
+      if (this._ref)
+      this._ref.update(selector, modifier, options, function(err) {
+        if (err)
+          this.fire('error', { error: err });
+        else
+          this.fire('updated');
+      }.bind(this));
     },
     ready: function() {
     }
