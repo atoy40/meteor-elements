@@ -1,0 +1,44 @@
+<!--
+A wrapper to meteor Session object.
+
+Example :
+
+      <meteor-session name="mainPanelIsActivated" value="{{isMainPanelIsActivated}}"></meteor-session>
+
+      <div hidden$="{{isMainPanelIsActivated}}">
+        ...
+      </div>
+-->
+
+<script>
+Polymer({
+  is: 'meteor-session',
+  properties: {
+    name: {
+      type: String,
+      observer : '_nameChanged'
+    },
+    result: {
+      type: Object,
+      notify : true,
+      observer : '_resultChanged'
+    }
+  },
+  _nameChanged : function() {
+    if (this._computation)
+      this._computation.stop();
+
+    this._computation = Tracker.autorun(function() {
+      this.result = Session.get(this.name);
+    }.bind(this));
+  },
+  _resultChanged : function(newValue, oldValue) {
+    if(!EJSON.equals(oldValue,newValue))
+      Session.set(this.name, newValue);
+  },
+  detached: function() {
+    if (this._computation)
+      this._computation.stop();
+  },
+});
+</script>

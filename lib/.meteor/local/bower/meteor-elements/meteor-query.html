@@ -1,0 +1,180 @@
+<!--
+@license
+The MIT License (MIT)
+
+Copyright (c) 2015 Anthony Hinsinger
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+Start a reactive collection query. This element must be a direct child of a meteor-collection element.
+
+
+Example :
+
+      <meteor-collection name="peoples" on-insert="_onInsert">
+        <meteor-query query='{ "age": 18 }' options='{"sort": { size: -1 } }' data="{{eighties}}"></meteor-query>
+      </meteor-collection>
+
+      <template is="dom-repeat" items="{{eighties}}">
+        <div>
+          <span>{{item.name}}</span>
+        </div>
+      </template>
+
+-->
+
+<script>
+  Polymer({
+    is: 'meteor-query',
+
+    properties: {
+      /**
+       * Data contains collection objects matching the query.
+       */
+      data: {
+        type: Array,
+        value: function() { return []; },
+        notify: true,
+        readOnly: true
+      },
+
+      /**
+       * The collection object to query
+       */
+      _collection: {
+        type: Object,
+        value: null
+      },
+
+      /**
+       *  A query describing the documents to find.
+       */
+      query: {
+        type: Object,
+        value: function() { return {}; },
+      },
+
+      /**
+       * An object containing query options (sort, skip and more).
+       */
+      options: {
+        type: Object,
+        value: function() { return {}; },
+      },
+
+      /**
+       * Activate this query.
+       */
+      enable: {
+        type: Boolean,
+        value: false,
+      },
+    },
+
+    observers: [ '_refind(_collection, query, options, enable)' ],
+
+    _setupCollection: function(collection) {
+      this._collection = collection;
+    },
+    _refind: function(_collection, query, options, enable) {
+      this.debounce("refind", this._setupObserver);
+    },
+    _setupObserver: function(_collection, query, options, enable) {
+      //console.log("(re)find meteor-query "+this._collection+" "+this.query+" "+this.options);
+
+      if (this._handle) {
+        this._handle.stop();
+        this._handle = null;
+        this.splice('data', 0, this.data.length);
+      }
+
+      if (this._collection && this.enable) {
+        this.initialdata = [];
+        this.initdone = false;
+
+        this._handle = this._collection.find(this.query, this.options).observeChanges({
+          addedBefore: function(id, fields, before) {
+            // added _id
+            fields._id = id;
+            if (before == null) {
+              if (this.initdone) {
+                this.push('data', fields);
+              } else {
+                this.initialdata.push(fields);
+              }
+            } else {
+              if (this.initdone) {
+                var i = this._findIndex(this.data, before);
+                this.splice('data', i, 0, fields);
+              } else {
+                var i = this._findIndex(this.initData, before);
+                this.initdata.splice(i, 0, fields);
+              }
+            }
+          }.bind(this),
+          changed: function(id, fields) {
+            var index = this._findIndex(this.data, id);
+            for(var field in fields) {
+              var path = ['data', index, field].join('.');
+              this.set(path, fields[field]);
+            }
+          }.bind(this),
+          movedBefore: function(id, before) {
+            var oldindex = this._findIndex(this.data, id);
+            var entry = this.data.splice(oldindex, 1)[0];
+
+            if (before) {
+              var newindex = this._findIndex(this.data, before);
+              this.splice('data', newindex, 0, entry);
+            } else {
+              this.push('data', entry);
+            }
+          }.bind(this),
+          removed: function(id) {
+            var index = this._findIndex(this.data, id);
+            this.splice('data', i, 1);
+          }.bind(this)
+        });
+
+        // push initial data as observeChanges returns.
+        this.initdone = true;
+        // unshift splice arguements to apply it to data array.
+        this.initialdata.unshift(0);
+        this.initialdata.unshift(0);
+        this.initialdata.unshift('data');
+        this.splice.apply(this, this.initialdata);
+        this.initialdata = null;
+      }
+    },
+    _findIndex: function(data, id) {
+      for (i = 0; i < data.length; i++) {
+        if (EJSON.equals(data[i]._id,id)) {
+          return i;
+        }
+      }
+      return -1;
+    },
+    ready: function() {
+    }
+  });
+</script>

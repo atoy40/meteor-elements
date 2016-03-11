@@ -1,0 +1,37 @@
+{
+  "name": "meteor-elements",
+  "version": "0.1.0",
+  "private": true,
+  "main": "meteor-elements.html",
+  "authors": [
+    "Anthony Hinsinger <anthony.hinsinger@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components"
+  ],
+  "keywords": [
+    "web-components",
+    "polymer",
+    "meteor",
+    "wrapper"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "webcomponentsjs": "Polymer/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://github.com/atoy40/meteor-elements",
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "905f70c5a85339f37a1d7e28eaa2e79b2743d129"
+  },
+  "_source": "git://github.com/atoy40/meteor-elements.git",
+  "_target": "~0.1.0",
+  "_originalSource": "atoy40/meteor-elements"
+}

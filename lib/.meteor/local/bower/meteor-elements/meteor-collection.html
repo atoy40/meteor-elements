@@ -1,0 +1,131 @@
+<!--
+@license
+The MIT License (MIT)
+
+Copyright (c) 2015 Anthony Hinsinger
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+A wrapper to meteor Mongo.Collection object.
+-->
+
+<script>
+  Polymer({
+    is: 'meteor-collection',
+
+    /**
+     * Fired when a document has been inserted. detail contains the id of the new document.
+     *
+     * @event insert
+     */
+
+    /**
+     * Fired when a documents has been removed.
+     *
+     * @event removed
+     */
+
+    /**
+     * Fired when an error occurs while inserting or removing document. detail contains the error object
+     *
+     * @event error
+     */
+
+    properties: {
+      /**
+       * Name of the mongo collection.
+       */
+      name: {
+        type: String,
+        value: null,
+        observer: '_nameChanged'
+      },
+      /**
+       * The collection instance.
+       */
+      _ref: {
+        type: Object,
+        value: null,
+        notify: true,
+      }
+    },
+    /**
+     * React to collection name changes.
+     */
+    _nameChanged: function() {
+      if (this.name) {
+        if (window['__meteor_elements_'+this.name]) {
+          this._ref = window['__meteor_elements_'+this.name];
+        } else {
+          this._ref = new Mongo.Collection(this.name);
+          window['__meteor_elements_'+this.name] = this._ref;
+        }
+      } else {
+        this._ref = null;
+      }
+
+      this._setupChildQueries();
+    },
+    /**
+     * Setup the collection reference to childs elements.
+     */
+    _setupChildQueries: function() {
+      var childs = Polymer.dom(this).childNodes;
+      for(var i=0; i<childs.length; i++) {
+        if (typeof childs[i]._setupCollection === 'function') {
+          childs[i]._setupCollection(this._ref);
+        }
+      }
+    },
+    /**
+     * Insert a document to collection.
+     *
+     * @method insert
+     */
+    insert: function(doc) {
+      if (this._ref)
+        this._ref.insert(doc, function(err, id) {
+          if (err)
+            this.fire('error', { error: err });
+          else
+            this.fire('insert', { id: id });
+        }.bind(this));
+    },
+    /**
+     * Remove documents in collection.
+     *
+     * @method remove
+     */
+    remove: function(selector) {
+      if (this._ref)
+        this._ref.remove(selector, function(err) {
+          if (err)
+            this.fire('error', { error: err });
+          else
+            this.fire('removed');
+        }.bind(this));
+    },
+    ready: function() {
+    }
+  });
+</script>

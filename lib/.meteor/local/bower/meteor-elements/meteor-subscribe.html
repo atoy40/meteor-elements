@@ -1,0 +1,120 @@
+<!--
+@license
+The MIT License (MIT)
+
+Copyright (c) 2015 Anthony Hinsinger
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+Subscribe to a Meteor (DDP) server publication.
+
+Example :
+
+      <meteor-subscribe name="peoples" args="[]" isready="{{subready}}"></meteor-subscribe>
+
+-->
+
+<script>
+  Polymer({
+    is: 'meteor-subscribe',
+
+    /**
+     * Fired when the subscribtion becomes ready (first shot of results received).
+     *
+     * @event subscribe-ready
+     */
+
+    /**
+     * Fired when an error occurs. The detail object contains the error.
+     *
+     * @event subscribe-error
+     */
+
+    properties: {
+      /**
+       * Publish name to subscribe.
+       */
+      name: {
+        type: String,
+        value: ""
+      },
+
+      /**
+       * The subscribe arguments.
+       */
+      args: {
+        type: Array,
+        value: null
+      },
+
+      /**
+       * Wait to get an Array on args to start subscription
+       */
+      waitargs: {
+        type: Boolean,
+        value: true
+      },
+
+      /**
+       * Ready state (first shot of results received).
+       */
+      isready: {
+        type: Boolean,
+        value: false,
+        notify: true
+      }
+    },
+    observers: [ '_resub(name, args, waitargs)' ],
+    _resub: function(name, args, waitargs) {
+      //console.log("(re)subscribe meteor-subscribe "+name+" "+ args);
+      this.stop();
+
+      if (this.name && (args instanceof Array || !waitargs)) {
+        var callargs = this.args.slice(0);
+        callargs.unshift(this.name);
+        callargs.push({
+          onStop: function(err) {
+            if (err)
+              this.fire('subscribe-error', { error: err });
+            this.isready = false;
+          }.bind(this),
+          onReady: function() {
+            this.isready = true;
+            this.fire('subscribe-ready');
+          }.bind(this)
+        });
+
+        this._handle = Meteor.subscribe.apply(null, callargs);
+      }
+    },
+    /** Stop this subscription */
+    stop: function() {
+      if (this._handle) {
+        this._handle.stop();
+        this._handle = null;
+      }
+    },
+    ready: function() {
+    }
+  });
+</script>

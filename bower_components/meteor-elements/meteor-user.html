@@ -1,0 +1,81 @@
+<!--
+This element manage current user.
+
+Example:
+
+    <meteor-user logged-in={{conn}} user={{user}}></meteor-user>
+
+    <span hidden$="{{!conn}}" >UserName : {{user.profile.name}}</span>
+
+-->
+
+<script>
+Polymer({
+  is: 'meteor-user',
+
+  properties: {
+
+    /**
+     * Get the current user id, or null if no user is logged in.
+     */
+    id: {
+      type: String,
+      notify: true,
+      readOnly: true
+    },
+    /**
+     * Get the current user record, or null if no user is logged in.
+     */
+    user : {
+      type : Object,
+      notify: true,
+      readOnly: true
+    },
+    /**
+     * Helper on user is logged in or not
+     */
+    loggedIn: {
+      type: Boolean,
+      notify: true,
+      readOnly: true,
+      value: false
+    },
+    /**
+     * True if a login method (such as Meteor.loginWithPassword, Meteor.loginWithFacebook, or Accounts.createUser) is currently in progress.
+     */
+    loggingIn: {
+      type: Boolean,
+      notify: true,
+      readOnly: true,
+      value: false
+    },
+
+  },
+  /**
+   * Log the user out.
+   */
+  logout : function() {
+    Meteor.logout();
+  },
+  ready: function() {
+    this._userComputation = Tracker.autorun(function() {
+      var user = Meteor.user();
+
+      this._setId(user ? user._id : null);
+      this._setUser(user);
+      this._setLoggedIn(user != null);
+    }.bind(this));
+
+    this._loggingInComputation = Tracker.autorun(function() {
+      this._setLoggingIn(Meteor.loggingIn());
+    }.bind(this));
+
+  },
+  detached: function() {
+    if (this._userComputation)
+      this._userComputation.stop();
+    if (this._loggingInComputation)
+      this._loggingInComputation.stop();
+  }
+});
+</script>
